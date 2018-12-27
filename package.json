@@ -1,7 +1,7 @@
 {
   "name": "substrate-ui",
   "version": "1.0.0",
-  "description": "Gav's Substrate UI",
+  "description": "Dom's Substrate UI",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,7 +22,7 @@
     "substrate",
     "ui"
   ],
-  "author": "Gav Wood",
+  "author": "Dom Steil",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.26.0",
