@@ -21,7 +21,7 @@ export class App extends ReactiveComponent {
 	constructor () {
 		super([], { ensureRuntime: runtimeUp })
 
-		// For debug only.
+		// For debug only. Debug.
 		window.runtime = runtime;
 		window.secretStore = secretStore;
 		window.addressBook = addressBook;
