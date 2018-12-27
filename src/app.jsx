@@ -4,7 +4,7 @@ const { generateMnemonic } = require('bip39')
 import {Icon, List, Label, Header, Segment, Divider, Button} from 'semantic-ui-react';
 import {Bond, TransformBond} from 'oo7';
 import {ReactiveComponent, If, Rspan} from 'oo7-react';
-import {calls, runtime, chain, system, runtimeUp, ss58Encode, addressBook, secretStore, metadata} from 'oo7-substrate';
+import {calls, runtime, chain, system, runtimeUp, ss58Encode, addressBook, secretStore} from 'oo7-substrate';
 import Identicon from 'polkadot-identicon';
 import {AccountIdBond, SignerBond} from './AccountIdBond.jsx';
 import {BalanceBond} from './BalanceBond.jsx';
@@ -28,7 +28,6 @@ export class App extends ReactiveComponent {
 		window.chain = chain;
 		window.calls = calls;
 		window.that = this;
-		window.metadata = metadata;
 
 		this.source = new Bond;
 		this.amount = new Bond;
@@ -40,9 +39,6 @@ export class App extends ReactiveComponent {
 		this.seedAccount = this.seed.map(s => s ? secretStore().accountFromPhrase(s) : undefined)
 		this.seedAccount.use()
 		this.runtime = new Bond;
-		this.parachainBinary = new Bond;
-		this.parachainId = new Bond;
-		this.parachainHead = new Bond;
 	}
 
 	readyRender() {
@@ -199,9 +195,7 @@ export class App extends ReactiveComponent {
 					icon='send'
 					tx={{
 						sender: runtime.balances.tryIndex(this.source),
-						call: calls.balances.transfer(this.destination, this.amount),
-						compact: false,
-						longevity: true
+						call: calls.balances.transfer(this.destination, this.amount)
 					}}
 				/>
 			</Segment>
@@ -225,30 +219,6 @@ export class App extends ReactiveComponent {
 					}}
 				/>
 			</Segment>
-			<Divider hidden />
-			<If condition={runtime.metadata.map(m => m.modules && m.modules.some(o => o.prefix === 'sudo') && m.modules.some(o => o.prefix === 'parachains'))} then={
-				<Segment style={{margin: '1em'}} padded>
-					<Header as='h2'>
-						<Icon name='chain' />
-						<Header.Content>
-							Parachain Registration
-							<Header.Subheader>Add a new Parachain</Header.Subheader>
-						</Header.Content>
-					</Header>
-					<div style={{paddingBottom: '1em'}}></div>
-					<InputBond bond={this.parachainId} placeholder='Enter a Parachain ID'/>
-					<InputBond bond={this.parachainHead} placeholder='Initial head data for the Parachain'/>
-					<FileUploadBond bond={this.parachainBinary} content='Select Parachain Binary' />
-					<TransactButton
-						content="Register"
-						icon='warning'
-						tx={{
-							sender: runtime.sudo ? runtime.sudo.key : null,
-							call: calls.sudo.sudo(calls.parachains.registerParachain(this.parachainId, this.parachainBinary, this.parachainHead.map(hexToBytes)))
-						}}
-					/>
-				</Segment>
-			}/>
 		</div>);
 	}
 }
